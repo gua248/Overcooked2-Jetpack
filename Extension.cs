@@ -1,0 +1,79 @@
+﻿using HarmonyLib;
+using InControl;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using UnityEngine;
+
+namespace OC2Jetpack.Extension
+{
+    public static class ClientPlayerControlsImpl_DefaultExtension
+    {
+        private static readonly FieldInfo fieldInfo_m_impactTimer = AccessTools.Field(typeof(ClientPlayerControlsImpl_Default), "m_impactTimer");
+        private static readonly FieldInfo fieldInfo_m_isFalling = AccessTools.Field(typeof(ClientPlayerControlsImpl_Default), "m_isFalling");
+        public static float get_m_impactTimer(this ClientPlayerControlsImpl_Default instance)
+        {
+            return (float)fieldInfo_m_impactTimer.GetValue(instance);
+        }
+        public static bool get_m_isFalling(this ClientPlayerControlsImpl_Default instance)
+        {
+            return (bool)fieldInfo_m_isFalling.GetValue(instance);
+        }
+    }
+
+    public static class KeyboardRebindExtension
+    {
+        private static readonly MethodInfo methodInfo_KeysToString = AccessTools.Method(typeof(KeyboardRebindElement), "KeysToString");
+        private static readonly MethodInfo methodInfo_SetKeyBindingsText = AccessTools.Method(typeof(KeyboardRebindElement), "SetKeyBindingsText");
+        private static readonly FieldInfo fieldInfo_m_ButtonID = AccessTools.Field(typeof(KeyboardRebindButtonElement), "m_ButtonID");
+        private static readonly FieldInfo fieldInfo_m_Side = AccessTools.Field(typeof(KeyboardRebindButtonElement), "m_Side");
+        private static readonly MethodInfo methodInfo_ShowRebindDialog = AccessTools.Method(typeof(KeyboardRebindController), "ShowRebindDialog");
+        private static readonly MethodInfo methodInfo_HideRebindDialog = AccessTools.Method(typeof(KeyboardRebindController), "HideRebindDialog");
+        private static readonly FieldInfo fieldInfo_keyCodes = AccessTools.Field(typeof(KeyInfo), "keyCodes");
+
+        public static string KeyToString(this KeyboardRebindElement instance, Key key)
+        {
+            return (string)methodInfo_KeysToString.Invoke(instance, new object[] { new List<Key> { key } });
+        }
+
+        public static void SetKeyBindingsText(this KeyboardRebindElement instance, string keyBindingsText)
+        {
+            methodInfo_SetKeyBindingsText.Invoke(instance, new object[] { keyBindingsText });
+        }
+
+        public static void set_m_ButtonID(this KeyboardRebindButtonElement instance, PlayerInputLookup.LogicalButtonID m_ButtonID)
+        {
+            fieldInfo_m_ButtonID.SetValue(instance, m_ButtonID);
+        }
+
+        public static PlayerInputLookup.LogicalButtonID get_m_ButtonID(this KeyboardRebindButtonElement instance)
+        {
+            return (PlayerInputLookup.LogicalButtonID)fieldInfo_m_ButtonID.GetValue(instance);
+        }
+        public static void set_m_Side(this KeyboardRebindButtonElement instance, PadSide m_Side)
+        {
+            fieldInfo_m_Side.SetValue(instance, m_Side);
+        }
+
+        public static PadSide get_m_Side(this KeyboardRebindButtonElement instance)
+        {
+            return (PadSide)fieldInfo_m_Side.GetValue(instance);
+        }
+
+        public static bool ShowRebindDialog(this KeyboardRebindController instance, KeyboardRebindElement keyboardRebindElement)
+        {
+            return (bool)methodInfo_ShowRebindDialog.Invoke(instance, new object[] { keyboardRebindElement });
+        }
+
+        public static void HideRebindDialog(this KeyboardRebindController instance)
+        {
+            methodInfo_HideRebindDialog.Invoke(instance, null);
+        }
+
+        public static KeyCode ToKeyCode(this Key key)
+        {
+            KeyCode[] keyCodes = (KeyCode[])fieldInfo_keyCodes.GetValue(KeyInfo.KeyList[(int)key]);
+            return keyCodes[0];
+        }
+    }
+}

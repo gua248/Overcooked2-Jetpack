@@ -1,0 +1,6 @@
+**/*.pdb
+lib/
+bin/
+obj/
+.vs/
+*.pdf
