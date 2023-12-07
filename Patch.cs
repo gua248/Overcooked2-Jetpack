@@ -138,9 +138,10 @@ namespace OC2Jetpack
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(ControlSchemeToggle), "OnEnable")]
-        public static void ControlSchemeToggleOnEnablePatch()
+        public static void ControlSchemeToggleOnEnablePatch(ControlSchemeToggle __instance)
         {
             JetpackKeyboardRebind.AddAllRebindUI();
+            __instance.ShowCurrentControlScheme();
         }
 
         [HarmonyPostfix]
@@ -160,6 +161,18 @@ namespace OC2Jetpack
                 PadSide side = __instance.get_m_Side();
                 int id = side == PadSide.Both ? 0 : (side == PadSide.Left ? 1 : 2);
                 JetpackKeyboardRebind.RefreshBindingText(__instance, id);
+                return false;
+            }
+            return true;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(KeyboardRebindButtonElement), "HasAnyBindings")]
+        public static bool KeyboardRebindButtonElementHasAnyBindingsPatch(KeyboardRebindButtonElement __instance, ref bool __result)
+        {
+            if (__instance.get_m_ButtonID() == JetpackKeyboardRebind.jetpackButtonID)
+            {
+                __result = true;
                 return false;
             }
             return true;

@@ -30,6 +30,14 @@ namespace OC2Jetpack.Extension
         private static readonly MethodInfo methodInfo_ShowRebindDialog = AccessTools.Method(typeof(KeyboardRebindController), "ShowRebindDialog");
         private static readonly MethodInfo methodInfo_HideRebindDialog = AccessTools.Method(typeof(KeyboardRebindController), "HideRebindDialog");
         private static readonly FieldInfo fieldInfo_keyCodes = AccessTools.Field(typeof(KeyInfo), "keyCodes");
+        private static readonly FieldInfo fieldInfo_m_ControlSchemeIndex = AccessTools.Field(typeof(ControlSchemeToggle), "m_ControlSchemeIndex");
+        private static readonly MethodInfo methodInfo_ShowControlScheme = AccessTools.Method(typeof(ControlSchemeToggle), "ShowControlScheme");
+
+        public static void ShowCurrentControlScheme(this ControlSchemeToggle instance)
+        {
+            int index = (int)fieldInfo_m_ControlSchemeIndex.GetValue(instance);
+            methodInfo_ShowControlScheme.Invoke(instance, new object[] { index });
+        }
 
         public static string KeyToString(this KeyboardRebindElement instance, Key key)
         {

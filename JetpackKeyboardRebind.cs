@@ -43,6 +43,21 @@ namespace OC2Jetpack
                 text.text = "Jet";
                 text.m_LocalizationTag = "\"Jet\"";
 
+                T17Button button = rebindObj.GetComponent<T17Button>();
+                T17Button buttonUp = parent.GetChild(8).GetComponent<T17Button>();
+                if (button != null && buttonUp != null)
+                {
+                    Navigation navigation = button.navigation;
+                    Navigation navigationUp = buttonUp.navigation;
+                    navigation.selectOnUp = buttonUp;
+                    navigation.selectOnLeft = null;
+                    navigation.selectOnRight = null;
+                    navigation.selectOnDown = navigationUp.selectOnDown;
+                    button.navigation = navigation;
+                    navigationUp.selectOnDown = button;
+                    buttonUp.navigation = navigationUp;
+                }
+
                 KeyboardRebindController keyboardRebindController = rebindObj.GetComponentInParent<KeyboardRebindController>();
                 KeyboardRebindButtonElement keyboardRebindButtonElement = rebindObj.GetComponent<KeyboardRebindButtonElement>();
                 keyboardRebindButtonElement.Awake();
@@ -50,12 +65,15 @@ namespace OC2Jetpack
                 PadSide side = id == 0 ? PadSide.Both : (id == 1 ? PadSide.Left : PadSide.Right);
                 keyboardRebindButtonElement.set_m_Side(side);
 
-                Button.ButtonClickedEvent buttonClickedEvent = new Button.ButtonClickedEvent();
-                buttonClickedEvent.AddListener(delegate ()
+                if (button != null)
                 {
-                    OnStartRebind(keyboardRebindController, keyboardRebindButtonElement, id);
-                });
-                rebindObj.GetComponent<T17Button>().onClick = buttonClickedEvent;
+                    Button.ButtonClickedEvent buttonClickedEvent = new Button.ButtonClickedEvent();
+                    buttonClickedEvent.AddListener(delegate ()
+                    {
+                        OnStartRebind(keyboardRebindController, keyboardRebindButtonElement, id);
+                    });
+                    button.onClick = buttonClickedEvent;
+                }
             }
             RefreshBindingText(parent.GetChild(9).GetComponent<KeyboardRebindElement>(), id);
         }
