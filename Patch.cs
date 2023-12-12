@@ -7,6 +7,7 @@ using Team17.Online.Multiplayer.Messaging;
 using BitStream;
 using System.Collections.Generic;
 using System.Linq;
+using InControl;
 
 namespace OC2Jetpack
 {
@@ -57,6 +58,15 @@ namespace OC2Jetpack
 
     public static class Patch
     {
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(FrontendCoopTabOptions), "OnOnlinePublicClicked")]
+        [HarmonyPatch(typeof(FrontendVersusTabOptions), "OnOnlinePublicClicked")]
+        public static bool OnOnlinePublicClickedPatch()
+        {
+            JetpackKeyboardRebind.jetpackKey = new Key[] { Key.None, Key.None, Key.None };
+            return true;
+        }
+
         [HarmonyPostfix]
         [HarmonyPatch(typeof(ClientPlayerRespawnBehaviour), "PauseMovement")]
         public static void ClientPlayerRespawnBehaviourPauseMovementPatch(ClientPlayerRespawnBehaviour __instance)
@@ -110,16 +120,19 @@ namespace OC2Jetpack
         [HarmonyPatch(typeof(Message), "Deserialise")]
         public static bool MessageDeserialisePatch(BitStreamReader reader, Message __instance, ref bool __result)
         {
-            __instance.Type = (MessageType)reader.ReadByte(8);
+            __instance.Type = (MessageType)reader.ReadByteAhead(8);
             if (__instance.Type == JetpackPlayerControl.jetpackMessageType)
             {
+                __instance.Type = (MessageType)reader.ReadByte(8);
                 __instance.Payload = new JetpackMessage(false, false, 0, false);
                 __instance.Payload.Deserialise(reader);
                 __result = true;
+                return false;
             }
             else
-                __result = __instance.Type >= MessageType.Example && __instance.Type < MessageType.COUNT && SerialisationRegistry<MessageType>.Deserialise(out __instance.Payload, __instance.Type, reader);
-            return false;
+            {
+                return true;
+            }
         }
 
         [HarmonyPrefix]

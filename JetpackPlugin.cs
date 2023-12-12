@@ -21,7 +21,7 @@ namespace OC2Jetpack
             ClientMessengerPatch.Patch(patcher);
             ServerMessengerPatch.Patch(patcher);
             MailboxPatch.Patch(patcher);
-            foreach (var patched in Harmony.GetAllPatchedMethods())
+            foreach (var patched in patcher.GetPatchedMethods())
                 Log("Patched: " + patched.FullDescription());
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
