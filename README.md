@@ -19,14 +19,8 @@ Fly in Overcooked! 2!
 ## How to use
 
 - Jet key can be set in the game key setup for keyboard / split keyboard. Gamepad players need to set a keyboard key here and map the gamepad button to this keyboard key in `Steam - Library - Overcooked! 2 - Controller Layout`.
-
 - Long press the jet key to lift off, short press the jet key to cruise.
 - Clients only work if the host has this MOD installed as well.
 - Jet is disabled by default when starting the game, or can be set to disabled by pressing `Esc` during key setup. When disabled it does not change the original game logic.
-
-
-
-## Tips
-
-- ⚠️**Do not use in Arcade public games!**
+- NOT valid in `Arcade Public`.
 - When enabled, gravity is changed to 1/5 of its original value, and all ceilings are removed, so there are many ways to get airborne without pressing the jet key.

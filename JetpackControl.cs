@@ -141,15 +141,16 @@ namespace OC2Jetpack
             if (jetpackPlayerControl.clientJetpackPlayerControl.jetting)
             {
                 FightFire();
-                if (!jetpackPlayerControl.clientJetpackPlayerControl.cruising && 
-                    (!jetpackPlayerControl.playerControls.GetDirectlyUnderPlayerControl()
-                    || !jetpackPlayerControl.playerControls.enabled))
+                if (!jetpackPlayerControl.clientJetpackPlayerControl.cruising 
+                    && !jetpackPlayerControl.playerControls.GetDirectlyUnderPlayerControl()
+                    || !jetpackPlayerControl.playerControls.enabled)
                     StopJet();
             }
         }
 
         public void OnMessageReceived(bool messageJetting, bool messageCruising)
         {
+            jetpackPlayerControl.playerControls.SetDirectlyUnderPlayerControl(true);
             if (!messageJetting) StopJet();
             else if (messageCruising) StartCruise();
             else StartJet();

@@ -39,7 +39,7 @@ namespace OC2Jetpack
                 GameObject rebindObj = GameObject.Instantiate(parent.GetChild(6).gameObject);
                 rebindObj.name = "KeyboardRebind_10";
                 rebindObj.transform.SetParent(parent, false);
-                T17Text text = rebindObj.transform.GetChild(0).GetComponent<T17Text>();
+                T17Text text = rebindObj.transform.Find("Title").GetComponent<T17Text>();
                 text.text = "Jet";
                 text.m_LocalizationTag = "\"Jet\"";
 
@@ -82,11 +82,11 @@ namespace OC2Jetpack
         {
             GameObject PCContent = GameObject.Find("PCContent");
             if (PCContent == null) return;
-            Transform parent = PCContent.transform.GetChild(1).GetChild(0).GetChild(1);
+            Transform parent = PCContent.transform.Find("CombinedKeyboard/ControllerImage_01/SplitKeyboard_01");
             AddRebindUI(parent, 0);
-            parent = PCContent.transform.GetChild(0).GetChild(0).GetChild(1);
+            parent = PCContent.transform.Find("SplitKeyboard/ControllerImage_01/SplitKeyboard_01");
             AddRebindUI(parent, 1);
-            parent = PCContent.transform.GetChild(0).GetChild(1).GetChild(1);
+            parent = PCContent.transform.Find("SplitKeyboard/ControllerImage_02/SplitKeyboard_02");
             AddRebindUI(parent, 2);
         }
     }
