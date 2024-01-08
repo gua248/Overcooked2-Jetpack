@@ -118,10 +118,11 @@ namespace OC2Jetpack
 
         [HarmonyPrefix]
         [HarmonyPatch(typeof(Message), "Deserialise")]
-        public static bool MessageDeserialisePatch(BitStreamReader reader, Message __instance, ref bool __result)
+        public static bool MessageDeserialisePatch(BitStreamReader reader, Message __instance, ref bool __result, ref bool __runOriginal)
         {
-            __instance.Type = (MessageType)reader.ReadByteAhead(8);
-            if (__instance.Type == JetpackPlayerControl.jetpackMessageType)
+            if (!__runOriginal) return false;
+            var messageType = (MessageType)reader.ReadByteAhead(8);
+            if (messageType == JetpackPlayerControl.jetpackMessageType)
             {
                 __instance.Type = (MessageType)reader.ReadByte(8);
                 __instance.Payload = new JetpackMessage(false, false, 0, false);
